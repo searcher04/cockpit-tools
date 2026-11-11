@@ -19,15 +19,23 @@ pub fn normalize_legacy_apikey_fun_url(raw: &str) -> Option<String> {
         return None;
     }
 
-    let mapped_host = match parsed.host_str()?.to_ascii_lowercase().as_str() {
+    let original_host = parsed.host_str()?.to_ascii_lowercase();
+    let is_register_url = matches!(original_host.as_str(), "apikey.fun" | "apikey.fan")
+        && matches!(parsed.path().trim_end_matches('/'), "" | "/register");
+    let mapped_host = match original_host.as_str() {
         "apikey.fun" => "apikey.fan",
         "api.apikey.fun" => "api.apikey.fan",
         "slb.apikey.fun" => "slb.apikey.fan",
+        "apikey.fan" if is_register_url && parsed.query().is_some() => "apikey.fan",
         _ => return None,
     };
 
     parsed.set_host(Some(mapped_host)).ok()?;
     parsed.set_fragment(None);
+    if is_register_url {
+        // Registration links in the ad-free fork must not carry affiliate parameters.
+        parsed.set_query(None);
+    }
     Some(parsed.to_string().trim_end_matches('/').to_string())
 }
 
@@ -47,7 +55,19 @@ mod tests {
         );
         assert_eq!(
             normalize_legacy_apikey_fun_url("https://apikey.fun/register?aff=cockpit"),
-            Some("https://apikey.fan/register?aff=cockpit".to_string())
+            Some("https://apikey.fan/register".to_string())
+        );
+    }
+
+    #[test]
+    fn strips_affiliate_parameters_from_current_registration_links() {
+        assert_eq!(
+            normalize_legacy_apikey_fun_url("https://apikey.fan/register?aff=other"),
+            Some("https://apikey.fan/register".to_string())
+        );
+        assert_eq!(
+            normalize_legacy_apikey_fun_url("https://apikey.fan/?aff=other"),
+            Some("https://apikey.fan".to_string())
         );
     }
 

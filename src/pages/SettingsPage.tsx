@@ -241,7 +241,6 @@ interface GeneralConfig {
   codex_restart_specified_app_on_switch: boolean;
   codex_local_access_entry_visible: boolean;
   codex_hide_relay_quota?: boolean;
-  top_right_ad_visible?: boolean;
   antigravity_dual_switch_no_restart_enabled: boolean;
   auto_switch_enabled: boolean;
   auto_switch_threshold: number;
@@ -684,7 +683,6 @@ export function useSettingsPageController() {
   const [codexRestartSpecifiedAppOnSwitch, setCodexRestartSpecifiedAppOnSwitch] = useState(false);
   const [codexLocalAccessEntryVisible, setCodexLocalAccessEntryVisible] = useState(true);
   const [codexHideRelayQuota, setCodexHideRelayQuota] = useState(false);
-  const [topRightAdVisible, setTopRightAdVisible] = useState(true);
   const [antigravityDualSwitchNoRestartEnabled, setAntigravityDualSwitchNoRestartEnabled] = useState(false);
   const [autoSwitchEnabled, setAutoSwitchEnabled] = useState(false);
   const [autoSwitchThreshold, setAutoSwitchThreshold] = useState('20');
@@ -1176,7 +1174,6 @@ export function useSettingsPageController() {
       codex_restart_specified_app_on_switch: codexRestartSpecifiedAppOnSwitch,
       codex_local_access_entry_visible: codexLocalAccessEntryVisible,
       codex_hide_relay_quota: codexHideRelayQuota,
-      top_right_ad_visible: topRightAdVisible,
       antigravity_dual_switch_no_restart_enabled: antigravityDualSwitchNoRestartEnabled,
       auto_switch_enabled: autoSwitchEnabled,
       auto_switch_threshold: Number.isNaN(parsedAutoSwitchThreshold)
@@ -1417,7 +1414,6 @@ export function useSettingsPageController() {
     codexRestartSpecifiedAppOnSwitch,
     codexLocalAccessEntryVisible,
     codexHideRelayQuota,
-    topRightAdVisible,
     antigravityDualSwitchNoRestartEnabled,
     autoSwitchEnabled,
     autoSwitchThreshold,
@@ -1810,7 +1806,6 @@ export function useSettingsPageController() {
       );
       setCodexLocalAccessEntryVisible(config.codex_local_access_entry_visible ?? true);
       setCodexHideRelayQuota(config.codex_hide_relay_quota ?? false);
-      setTopRightAdVisible(config.top_right_ad_visible ?? true);
       setAntigravityDualSwitchNoRestartEnabled(
         config.antigravity_dual_switch_no_restart_enabled ?? false
       );
@@ -3608,7 +3603,6 @@ export function useSettingsPageController() {
     setTheme,
     setThemeColor,
     setTokenKeeperEnabled,
-    setTopRightAdVisible,
     setTraeAppPath,
     setTraeAutoRefresh,
     setTraeAutoRefreshCustomMode,
@@ -3669,7 +3663,6 @@ export function useSettingsPageController() {
     themeColor,
     THRESHOLD_PRESET_VALUES,
     tokenKeeperEnabled,
-    topRightAdVisible,
     traeAppPath,
     traeAutoRefresh,
     traeAutoRefreshCustomMode,
