@@ -125,7 +125,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://apikey.fan',
     apiKeyUrl: APIKEY_FUN_REGISTER_URL,
-    isPartner: true,
     sourceTag: APIKEY_FUN_SOURCE_TAG,
     modelMappings: directRoutes(),
   },
@@ -149,7 +148,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://www.shengsuanyun.com/?from=CH_4HHXMRYF',
     apiKeyUrl: 'https://www.shengsuanyun.com/?from=CH_4HHXMRYF',
-    isPartner: true,
     modelMappings: roleMappedRoutes(
       'anthropic/claude-sonnet-4.6',
       'anthropic/claude-opus-4.8',
@@ -165,7 +163,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://pateway.ai',
     apiKeyUrl: 'https://pateway.ai/?ch=etzpm8&aff=WB6M6F67#/',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -176,7 +173,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://www.volcengine.com/activity/codingplan?ac=MMAP8JTTCAQ2&rc=6J6FV5N2&utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
     apiKeyUrl: 'https://www.volcengine.com/activity/codingplan?ac=MMAP8JTTCAQ2&rc=6J6FV5N2&utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('ark-code-latest'),
   },
   {
@@ -187,7 +183,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://www.byteplus.com/en/product/modelark?utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
     apiKeyUrl: 'https://www.byteplus.com/en/product/modelark?utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('ark-code-latest'),
   },
   {
@@ -198,7 +193,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.ccsub.net',
     apiKeyUrl: 'https://www.ccsub.net/register?ref=Y6Z8DXEA',
-    isPartner: true,
     modelMappings: directRoutes(CLAUDE_DESKTOP_GATEWAY_DEFAULT_MODELS, { supports1m: true }),
   },
   {
@@ -209,7 +203,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://unity2.ai',
     apiKeyUrl: 'https://unity2.ai/register?source=ccs',
-    isPartner: true,
     modelMappings: directRoutes(CLAUDE_DESKTOP_GATEWAY_DEFAULT_MODELS, { supports1m: true }),
   },
   {
@@ -232,7 +225,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     authScheme: 'bearer',
     connectionMode: 'local_mapping',
     website: 'https://platform.moonshot.cn/console?aff=cc-switch',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('kimi-k2.7-code'),
   },
   {
@@ -242,7 +234,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     authScheme: 'bearer',
     connectionMode: 'local_mapping',
     website: 'https://www.kimi.com/code/docs/?aff=cc-switch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -405,7 +396,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey?apikey=%7B%7D&utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
     apiKeyUrl: 'https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey?apikey=%7B%7D&utm_campaign=hw&utm_content=ccswitch&utm_medium=devrel_tool_web&utm_source=OWO&utm_term=ccswitch',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('doubao-seed-2-0-code-preview-latest'),
   },
   {
@@ -430,7 +420,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://siliconflow.cn',
     apiKeyUrl: 'https://cloud.siliconflow.cn/i/drGuwc9k',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('Pro/MiniMaxAI/MiniMax-M2.7'),
   },
   {
@@ -441,7 +430,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'local_mapping',
     website: 'https://siliconflow.com',
     apiKeyUrl: 'https://cloud.siliconflow.cn/i/drGuwc9k',
-    isPartner: true,
     modelMappings: repeatedMappedRoute('MiniMaxAI/MiniMax-M2.7'),
   },
   {
@@ -463,7 +451,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.dmxapi.cn',
     apiKeyUrl: 'https://www.dmxapi.cn',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -474,7 +461,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.packyapi.com',
     apiKeyUrl: 'https://www.packyapi.com/register?aff=cc-switch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -485,7 +471,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://apinebula.com',
     apiKeyUrl: 'https://apinebula.com/02rw5X',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -496,7 +481,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.atlascloud.ai/console/coding-plan',
     apiKeyUrl: 'https://www.atlascloud.ai/console/coding-plan',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -517,7 +501,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://claudeapi.com',
     apiKeyUrl: 'https://console.claudeapi.com/register?aff=pCLD',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -528,7 +511,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://claudecn.top',
     apiKeyUrl: 'https://claudecn.top/register?aff=ccswitch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -539,7 +521,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://runapi.co',
     apiKeyUrl: 'https://runapi.co',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -565,7 +546,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://cubence.com',
     apiKeyUrl: 'https://cubence.com/signup?code=CCSWITCH&source=ccs',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -576,7 +556,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://aigocode.com',
     apiKeyUrl: 'https://aigocode.com/invite/CC-SWITCH',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -587,7 +566,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.right.codes',
     apiKeyUrl: 'https://www.right.codes/register?aff=CCSWITCH',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -601,7 +579,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.aicodemirror.com',
     apiKeyUrl: 'https://www.aicodemirror.com/register?invitecode=9915W3',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -612,7 +589,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.crazyrouter.com',
     apiKeyUrl: 'https://www.crazyrouter.com/register?aff=OZcm&ref=cc-switch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -627,7 +603,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://sssaicodeapi.com',
     apiKeyUrl: 'https://sssaicodeapi.com/register?ref=DCP0SM',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -638,7 +613,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.compshare.cn',
     apiKeyUrl: 'https://www.compshare.cn/coding-plan?ytag=GPU_YY_YX_git_cc-switch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -649,7 +623,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.compshare.cn',
     apiKeyUrl: 'https://www.compshare.cn/coding-plan?ytag=GPU_YY_YX_git_cc-switch',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -660,7 +633,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://www.micuapi.ai',
     apiKeyUrl: 'https://www.micuapi.ai/register?aff=aOYQ',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {
@@ -671,7 +643,6 @@ export const CLAUDE_DESKTOP_GATEWAY_PROVIDER_PRESETS: readonly ClaudeDesktopGate
     connectionMode: 'direct',
     website: 'https://ctok.ai',
     apiKeyUrl: 'https://ctok.ai',
-    isPartner: true,
     modelMappings: directRoutes(),
   },
   {

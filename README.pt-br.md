@@ -19,6 +19,8 @@ Uma **ferramenta universal de gerenciamento de contas para IDEs de IA**, atualme
 
 **Plataformas oficialmente suportadas**: macOS, Windows e Linux.
 
+> Esta é uma versão pessoal sem anúncios do [projeto original](https://github.com/jlcodes99/cockpit-tools): banners promocionais, campanhas comerciais e o rastreamento de afiliados da APIKEY.FUN e os selos de parceiros foram removidos, mantendo os links funcionais de configuração de provedores e os recursos principais de gerenciamento de contas e integração de API.
+
 ---
 
 ## Visão Geral dos Recursos
@@ -367,14 +369,6 @@ npm run tauri build
 ## Comunidade
 
 Grupo de bate-papo no Telegram recém-criado: [Junte-se ao grupo](https://t.me/+Y8gMv4SlZUU2MWY1)
-
----
-
-## Patrocínio
-
-Se você achar este projeto útil, considere apoiá-lo aqui: [☕ Doar](docs/DONATE.pt-br.md)
-
-Toda contribuição ajuda a manter o desenvolvimento de código aberto. Obrigado!
 
 ---
 

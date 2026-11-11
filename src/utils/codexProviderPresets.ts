@@ -112,7 +112,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     ],
     website: "https://www.packyapi.com",
     apiKeyUrl: "https://www.packyapi.com/register?aff=cc-switch",
-    isPartner: true,
   },
   {
     id: "cubence",
@@ -125,7 +124,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     ],
     website: "https://cubence.com",
     apiKeyUrl: "https://cubence.com/signup?code=CCSWITCH&source=ccs",
-    isPartner: true,
   },
   {
     id: "aigocode",
@@ -133,7 +131,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://api.aigocode.com"],
     website: "https://aigocode.com",
     apiKeyUrl: "https://aigocode.com/invite/CC-SWITCH",
-    isPartner: true,
   },
   {
     id: "rightcode",
@@ -141,7 +138,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://right.codes/codex/v1"],
     website: "https://www.right.codes",
     apiKeyUrl: "https://www.right.codes/register?aff=CCSWITCH",
-    isPartner: true,
   },
   {
     id: "sssaicode",
@@ -153,7 +149,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     ],
     website: "https://www.sssaicode.com",
     apiKeyUrl: "https://www.sssaicode.com/register?ref=DCP0SM",
-    isPartner: true,
   },
   {
     id: "micu",
@@ -161,7 +156,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://www.openclaudecode.cn/v1"],
     website: "https://www.openclaudecode.cn",
     apiKeyUrl: "https://www.openclaudecode.cn/register?aff=aOYQ",
-    isPartner: true,
   },
   {
     id: "x_code_api",
@@ -169,7 +163,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://x-code.cc/v1"],
     website: "https://x-code.cc",
     apiKeyUrl: "https://x-code.cc",
-    isPartner: true,
   },
   {
     id: "ctok_ai",
@@ -177,7 +170,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://api.ctok.ai/v1"],
     website: "https://ctok.ai",
     apiKeyUrl: "https://ctok.ai",
-    isPartner: true,
   },
   {
     id: "aihubmix",
@@ -190,7 +182,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     name: "DMXAPI",
     baseUrls: ["https://www.dmxapi.cn/v1"],
     website: "https://www.dmxapi.cn",
-    isPartner: true,
   },
   {
     id: "compshare",
@@ -199,7 +190,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     website: "https://www.compshare.cn",
     apiKeyUrl:
       "https://www.compshare.cn/coding-plan?ytag=GPU_YY_YX_git_cc-switch",
-    isPartner: true,
   },
   {
     id: "openrouter",
@@ -226,7 +216,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     ],
     website: "https://www.aicodemirror.com",
     apiKeyUrl: "https://www.aicodemirror.com/register?invitecode=9915W3",
-    isPartner: true,
   },
   {
     id: "aicoding",
@@ -234,7 +223,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://api.aicoding.sh"],
     website: "https://aicoding.sh",
     apiKeyUrl: "https://aicoding.sh/i/CCSWITCH",
-    isPartner: true,
   },
   {
     id: "crazyrouter",
@@ -242,7 +230,6 @@ export const CODEX_API_PROVIDER_PRESETS: readonly CodexApiProviderPreset[] = [
     baseUrls: ["https://crazyrouter.com/v1"],
     website: "https://www.crazyrouter.com",
     apiKeyUrl: "https://www.crazyrouter.com/register?aff=OZcm&ref=cc-switch",
-    isPartner: true,
   },
   {
     id: "moonshot",

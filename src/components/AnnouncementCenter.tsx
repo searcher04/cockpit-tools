@@ -8,8 +8,6 @@ import type { Announcement, AnnouncementAction } from '../types/announcement';
 import { useAnnouncementStore } from '../stores/useAnnouncementStore';
 import { useEscCloseTopmost } from '../hooks/useEscClose';
 import { useModalFocusTrap } from '../hooks/useModalFocusTrap';
-import { useApiKeyFunCampaign } from '../hooks/useApiKeyFunCampaign';
-import { APIKEY_FUN_CAMPAIGN, filterApiKeyFunCampaignAnnouncement, isApiKeyFunCampaignActive } from '../utils/apiKeyFunCampaign';
 import './AnnouncementCenter.css';
 
 interface AnnouncementCenterProps {
@@ -98,11 +96,36 @@ function AnnouncementSurface({
 }: AnnouncementSurfaceProps) {
   const { t } = useTranslation();
   const rawAnnouncementState = useAnnouncementStore((state) => state.state);
-  const campaignActive = useApiKeyFunCampaign();
-  const announcementState = useMemo(
-    () => filterApiKeyFunCampaignAnnouncement(rawAnnouncementState, campaignActive),
-    [rawAnnouncementState, campaignActive],
-  );
+  const announcementState = useMemo(() => {
+    const isPromotion = (item: Announcement | null | undefined): boolean => {
+      if (!item) return false;
+      const id = item.id.trim().toLowerCase();
+      const type = String(item.type).trim().toLowerCase();
+      const target = item.action?.target?.trim().toLowerCase() ?? '';
+      return (
+        id.startsWith('apikey-fan-')
+        || id.startsWith('sponsor-')
+        || id.startsWith('top-right-ad-')
+        || ['promotion', 'promotional', 'sponsor', 'advertisement', 'ad', 'campaign'].includes(type)
+        || target.includes('apikey.fan')
+        || target.includes('aff=')
+      );
+    };
+    const hiddenIds = new Set([
+      ...rawAnnouncementState.announcements.filter(isPromotion).map((item) => item.id),
+      ...(isPromotion(rawAnnouncementState.popupAnnouncement) && rawAnnouncementState.popupAnnouncement
+        ? [rawAnnouncementState.popupAnnouncement.id]
+        : []),
+    ]);
+    return {
+      ...rawAnnouncementState,
+      announcements: rawAnnouncementState.announcements.filter((item) => !isPromotion(item)),
+      unreadIds: rawAnnouncementState.unreadIds.filter((id) => !hiddenIds.has(id)),
+      popupAnnouncement: isPromotion(rawAnnouncementState.popupAnnouncement)
+        ? null
+        : rawAnnouncementState.popupAnnouncement,
+    };
+  }, [rawAnnouncementState]);
   const loading = useAnnouncementStore((state) => state.loading);
   const fetchState = useAnnouncementStore((state) => state.fetchState);
   const markAsRead = useAnnouncementStore((state) => state.markAsRead);
@@ -114,7 +137,6 @@ function AnnouncementSurface({
 
   const [listOpen, setListOpen] = useState(false);
   const [detailAnnouncement, setDetailAnnouncement] = useState<Announcement | null>(null);
-  const campaignDetailInactive = detailAnnouncement?.id === APIKEY_FUN_CAMPAIGN.id && !campaignActive;
   const [detailFromList, setDetailFromList] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const listDialog = useRef<HTMLDivElement>(null);
@@ -272,7 +294,6 @@ function AnnouncementSurface({
   };
 
   const runAction = async (action: AnnouncementAction) => {
-    if (detailAnnouncement?.id === APIKEY_FUN_CAMPAIGN.id && !isApiKeyFunCampaignActive()) return;
     if (action.type === 'tab') {
       const targetPage = TAB_TARGET_PAGE_MAP[action.target];
       if (targetPage) {
@@ -446,7 +467,7 @@ function AnnouncementSurface({
               <div className="modal-body announcement-detail-body">
                 <div className="announcement-detail-time">{formatTimeAgo(detailAnnouncement.createdAt, translateText)}</div>
                 <div className="announcement-detail-content">
-                  {campaignDetailInactive ? t('apiKeyFun.campaign.inactive') : detailAnnouncement.content}
+                  {detailAnnouncement.content}
                 </div>
 
                 {detailAnnouncement.images && detailAnnouncement.images.length > 0 && (
@@ -494,7 +515,6 @@ function AnnouncementSurface({
                 {detailAnnouncement.action ? (
                   <button
                     className="btn btn-primary"
-                    disabled={campaignDetailInactive}
                     onClick={() => {
                       void runAction(detailAnnouncement.action as AnnouncementAction);
                     }}

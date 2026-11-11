@@ -682,6 +682,26 @@ fn filter_announcements(
     let mut filtered: Vec<Announcement> = raw
         .into_iter()
         .filter_map(|announcement| {
+            let announcement_id = announcement.id.trim().to_ascii_lowercase();
+            let announcement_type = announcement.announcement_type.trim().to_ascii_lowercase();
+            let action_target = announcement
+                .action
+                .as_ref()
+                .map(|action| action.target.trim().to_ascii_lowercase())
+                .unwrap_or_default();
+            let is_promotion = announcement_id.starts_with("apikey-fan-")
+                || announcement_id.starts_with("sponsor-")
+                || announcement_id.starts_with("top-right-ad-")
+                || matches!(
+                    announcement_type.as_str(),
+                    "promotion" | "promotional" | "sponsor" | "advertisement" | "ad" | "campaign"
+                )
+                || action_target.contains("apikey.fan")
+                || action_target.contains("aff=");
+            if is_promotion {
+                return None;
+            }
+
             let target_versions = if announcement.target_versions.trim().is_empty() {
                 "*"
             } else {
@@ -723,103 +743,6 @@ fn filter_announcements(
         let b_time = parse_datetime_millis(&b.created_at).unwrap_or(0);
         b_time.cmp(&a_time).then(b.priority.cmp(&a.priority))
     });
-    filtered
-}
-
-fn apply_localized_top_right_ad(ad: &TopRightAd, locale: &str) -> TopRightAd {
-    let mut localized = ad.clone();
-    if let Some(locales) = &ad.locales {
-        let lower_locale = locale.to_lowercase();
-        let matched_key = locales.keys().find(|key| {
-            let normalized_key = key.to_lowercase();
-            normalized_key == lower_locale || lower_locale.starts_with(&(normalized_key + "-"))
-        });
-
-        if let Some(key) = matched_key {
-            if let Some(localized_data) = locales.get(key) {
-                if let Some(text) = &localized_data.text {
-                    localized.text = text.clone();
-                }
-                if let Some(badge) = &localized_data.badge {
-                    localized.badge = Some(badge.clone());
-                }
-                if let Some(cta_label) = &localized_data.cta_label {
-                    localized.cta_label = Some(cta_label.clone());
-                }
-            }
-        }
-    }
-
-    localized
-}
-
-fn filter_top_right_ad_item(
-    mut item: TopRightAd,
-    current_version: &str,
-    locale: &str,
-    api_relay_enabled: bool,
-) -> Option<TopRightAd> {
-    if !item.enabled {
-        return None;
-    }
-    if item.relay_related && !api_relay_enabled {
-        return None;
-    }
-
-    let target_versions = if item.target_versions.trim().is_empty() {
-        "*"
-    } else {
-        item.target_versions.as_str()
-    };
-    if !match_version(current_version, target_versions) {
-        return None;
-    }
-    if let Some(target_languages) = &item.target_languages {
-        if !is_language_match(locale, target_languages) {
-            return None;
-        }
-    }
-
-    if let Some(expires_at) = &item.expires_at {
-        if let Some(expire_ms) = parse_datetime_millis(expires_at) {
-            if expire_ms < Utc::now().timestamp_millis() {
-                return None;
-            }
-        }
-    }
-
-    item = apply_localized_top_right_ad(&item, locale);
-    Some(item)
-}
-
-fn filter_top_right_ad(
-    ad: Option<TopRightAd>,
-    current_version: &str,
-    locale: &str,
-    api_relay_enabled: bool,
-) -> Option<TopRightAd> {
-    filter_top_right_ad_item(ad?, current_version, locale, api_relay_enabled)
-}
-
-fn filter_top_right_ads(
-    ads: Vec<TopRightAd>,
-    current_version: &str,
-    locale: &str,
-    api_relay_enabled: bool,
-) -> Vec<TopRightAd> {
-    let mut filtered: Vec<TopRightAd> = ads
-        .into_iter()
-        .filter_map(|item| {
-            filter_top_right_ad_item(item, current_version, locale, api_relay_enabled)
-        })
-        .collect();
-
-    filtered.sort_by(|a, b| {
-        let a_time = parse_datetime_millis(&a.created_at).unwrap_or(0);
-        let b_time = parse_datetime_millis(&b.created_at).unwrap_or(0);
-        b.priority.cmp(&a.priority).then(b_time.cmp(&a_time))
-    });
-
     filtered
 }
 
@@ -921,6 +844,9 @@ fn filter_sponsor_module(
     }
 
     module = apply_localized_sponsor_module(&module, locale);
+    module.title.clear();
+    module.subtitle.clear();
+    module.locales = None;
     module.sponsors = module
         .sponsors
         .into_iter()
@@ -935,7 +861,21 @@ fn filter_sponsor_module(
                     locale,
                 )
         })
-        .map(|sponsor| apply_localized_sponsor(&sponsor, locale))
+        .map(|sponsor| {
+            let mut sponsor = apply_localized_sponsor(&sponsor, locale);
+            let is_api_key_fun = sponsor.id.eq_ignore_ascii_case("apikey-fun");
+            sponsor.logo_url = None;
+            sponsor.url = is_api_key_fun.then(|| "https://apikey.fan".to_string());
+            sponsor.badge = None;
+            sponsor.description.clear();
+            sponsor.locales = None;
+            if let Some(integration) = &mut sponsor.integration {
+                integration.website = is_api_key_fun.then(|| "https://apikey.fan".to_string());
+                integration.api_key_url =
+                    is_api_key_fun.then(|| "https://apikey.fan/register".to_string());
+            }
+            sponsor
+        })
         .collect();
 
     module.sponsors.sort_by(|a, b| {
@@ -970,10 +910,34 @@ async fn fetch_remote_announcements() -> Result<AnnouncementResponse, String> {
         return Err(format!("远端公告接口返回异常状态: {}", response.status()));
     }
 
-    response
+    let mut payload: AnnouncementResponse = response
         .json()
         .await
-        .map_err(|e| format!("解析远端公告失败: {}", e))
+        .map_err(|e| format!("解析远端公告失败: {}", e))?;
+    // The shared upstream feed also contains ad slots. Keep the feed for software
+    // notices and API relay routing, but never cache or expose its promotional payload.
+    payload.top_right_ad = None;
+    payload.top_right_ads_enabled = false;
+    payload.top_right_ads.clear();
+    if let Some(module) = payload.sponsor_module.as_mut() {
+        module.title.clear();
+        module.subtitle.clear();
+        module.locales = None;
+        for sponsor in &mut module.sponsors {
+            let is_api_key_fun = sponsor.id.eq_ignore_ascii_case("apikey-fun");
+            sponsor.logo_url = None;
+            sponsor.url = is_api_key_fun.then(|| "https://apikey.fan".to_string());
+            sponsor.badge = None;
+            sponsor.description.clear();
+            sponsor.locales = None;
+            if let Some(integration) = &mut sponsor.integration {
+                integration.website = is_api_key_fun.then(|| "https://apikey.fan".to_string());
+                integration.api_key_url =
+                    is_api_key_fun.then(|| "https://apikey.fan/register".to_string());
+            }
+        }
+    }
+    Ok(payload)
 }
 
 fn should_force_refresh_for_version(payload: &AnnouncementResponse, current_version: &str) -> bool {
@@ -1124,29 +1088,11 @@ pub async fn get_announcement_state() -> Result<AnnouncementState, String> {
 }
 
 pub async fn get_top_right_ad_state() -> Result<TopRightAdState, String> {
-    let current_version = env!("CARGO_PKG_VERSION");
-    let locale = config::get_user_config().language.to_lowercase();
-    let raw_payload = load_announcements_raw().await?;
-    if !raw_payload.top_right_ads_enabled {
-        return Ok(TopRightAdState {
-            ad: None,
-            ads: Vec::new(),
-        });
-    }
-
-    let ad = filter_top_right_ad(
-        raw_payload.top_right_ad,
-        current_version,
-        &locale,
-        raw_payload.api_relay_enabled,
-    );
-    let ads = filter_top_right_ads(
-        raw_payload.top_right_ads,
-        current_version,
-        &locale,
-        raw_payload.api_relay_enabled,
-    );
-    Ok(TopRightAdState { ad, ads })
+    // Retain the command for compatibility with older frontends, but never serve ads.
+    Ok(TopRightAdState {
+        ad: None,
+        ads: Vec::new(),
+    })
 }
 
 pub async fn get_sponsor_module_state() -> Result<SponsorModuleState, String> {
@@ -1186,7 +1132,6 @@ pub async fn force_refresh_sponsor_module() -> Result<SponsorModuleState, String
 }
 
 pub async fn force_refresh_top_right_ad() -> Result<TopRightAdState, String> {
-    remove_cache()?;
     get_top_right_ad_state().await
 }
 

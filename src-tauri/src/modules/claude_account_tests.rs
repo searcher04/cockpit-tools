@@ -615,7 +615,7 @@ fn desktop_login_component_cleanup_removes_only_owned_cache_dirs() {
         );
         assert_eq!(
             account.api_provider_api_key_url.as_deref(),
-            Some("https://apikey.fan/register?aff=cockpit")
+            Some("https://apikey.fan/register")
         );
 
         assert!(!migrate_legacy_apikey_fun_urls(&mut account));

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { openUrl } from '@tauri-apps/plugin-opener';
 import { useTranslation } from 'react-i18next';
 import {
   BookmarkPlus,
@@ -30,7 +29,7 @@ import {
   type ApiKeyFunPrefillTarget,
 } from '../utils/apiKeyFunPrefill';
 import { ApiKeyFunKeyConfigModal } from '../components/apiKeyFun/ApiKeyFunKeyConfigModal';
-import { ApiKeyFunPromotionHeader } from '../components/apiKeyFun/ApiKeyFunPromotionHeader';
+import { ApiKeyFunHeader } from '../components/apiKeyFun/ApiKeyFunHeader';
 import { useSponsorStore } from '../stores/useSponsorStore';
 import './ApiKeyFunPage.css';
 
@@ -220,16 +219,6 @@ export function ApiKeyFunPage() {
     const timer = window.setTimeout(() => setSaveFlash(false), 1500);
     return () => window.clearTimeout(timer);
   }, [saveFlash]);
-
-  const openExternal = useCallback((url: string) => {
-    try {
-      void openUrl(url).catch(() => {
-        window.location.href = url;
-      });
-    } catch {
-      window.location.href = url;
-    }
-  }, []);
 
   // 自动额度查询
   useEffect(() => {
@@ -501,7 +490,7 @@ export function ApiKeyFunPage() {
 
   return (
     <div className="apikey-fun-page">
-      <ApiKeyFunPromotionHeader onOpen={openExternal} />
+      <ApiKeyFunHeader />
 
       <div className="apikey-fun-dashboard-grid">
         <main className="apikey-fun-main-col">

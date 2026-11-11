@@ -9,16 +9,17 @@ function nodes(tree: any): any[] {
 function harness(autoPopup: boolean) {
   const popup = { id: 'fixture', title: 'Fixture announcement', summary: 'Fixture', content: 'Text', type: 'info',
     createdAt: new Date().toISOString(), images: [{ url: 'https://example.invalid/image.png' }] };
+  const promotion = { id: 'apikey-fan-fixture', title: 'Sponsored offer fixture', summary: 'Promotion', content: 'Ad content',
+    type: 'info', createdAt: new Date().toISOString(), action: { type: 'url', target: 'https://apikey.fan/offer?aff=COCKPIT', label: 'Open' } };
   let traps: any[] = [];
   let escapes: any[] = [];
-  const store = { state: { announcements: [popup], unreadIds: [], popupAnnouncement: autoPopup ? popup : null },
+  const store = { state: { announcements: [popup, promotion], unreadIds: [promotion.id], popupAnnouncement: autoPopup ? popup : null },
     loading: false, fetchState: async () => {}, markAsRead: async () => {}, markAllAsRead: async () => {} };
   const h = loadHookModule(new URL('./AnnouncementCenter.tsx', import.meta.url), {
     'react-dom': { createPortal: (tree: any) => tree },
     '@tauri-apps/plugin-opener': { openUrl: async () => {} },
     'react-i18next': { useTranslation: () => ({ t: (key: string) => key }) },
     '../stores/useAnnouncementStore': { useAnnouncementStore: (selector: any) => selector(store) },
-    '../hooks/useApiKeyFunCampaign': { useApiKeyFunCampaign: () => false },
     '../hooks/useModalFocusTrap': { useModalFocusTrap: (ref: any, open: boolean, _restore = true, active = true) => traps.push({ ref, open, active }) },
     '../hooks/useEscClose': { useEscCloseTopmost: (open: boolean, close: () => void, ref: any) => escapes.push({ open, close, ref }) },
   }, { document: { body: {}, querySelector: () => null, addEventListener() {}, removeEventListener() {} },
@@ -57,9 +58,15 @@ test('the automatic startup announcement registers the visible root and keeps it
 test('opening the announcement list uses the same focus wiring as startup details', () => {
   const h = harness(false);
   h.nodes().find((node) => node.type === 'button').props.onClick();
-  const dialog = h.nodes().find((node) => node.props?.role === 'dialog');
+  const rendered = h.nodes();
+  const dialog = rendered.find((node) => node.props?.role === 'dialog');
   assert.equal(dialog.props.ref, h.active().ref);
   assert.equal(dialog.props.tabIndex, -1);
+  assert.equal(
+    rendered.some((node) => node.props?.children === 'Sponsored offer fixture'),
+    false,
+    'promotional announcements should not appear in the list',
+  );
   h.esc();
   assert.equal(h.nodes().filter((node) => node.props?.role === 'dialog').length, 0);
   h.h.unmount();

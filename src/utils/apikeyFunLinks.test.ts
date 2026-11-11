@@ -12,7 +12,7 @@ import {
 } from "./apikeyFunLinks.ts";
 
 test("apikey.fan constants use the new domain", () => {
-  assert.equal(APIKEY_FUN_REGISTER_URL, "https://apikey.fan/register?aff=cockpit");
+  assert.equal(APIKEY_FUN_REGISTER_URL, "https://apikey.fan/register");
   assert.equal(APIKEY_FUN_GLOBAL_ENDPOINT, "https://api.apikey.fan");
   assert.equal(APIKEY_FUN_DIRECT_ENDPOINT, "https://slb.apikey.fan");
   assert.equal(APIKEY_FUN_PROVIDER_BASE_URL, "https://api.apikey.fan/v1");
