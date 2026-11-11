@@ -1,0 +1,96 @@
+name: Ad-free Windows packages
+
+on:
+  push:
+    branches:
+      - ad-free
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ad-free-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-windows:
+    name: Build Windows x64 installers
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout ad-free branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Restore Windows build cache
+        uses: ./.github/actions/host-build-cache
+        with:
+          target: windows
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run frontend regression tests
+        run: npm test
+
+      - name: Run release-script tests
+        run: npm run test:release
+
+      - name: Sync application versions
+        run: npm run sync-version
+
+      - name: Build Windows x64 installers
+        env:
+          COCKPIT_AD_FREE_BUILD: "1"
+        run: npx tauri build --ci
+
+      - name: Build portable ZIP
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          node scripts/release/build_windows_portable.cjs --version $version --release-dir target/release --output-dir portable-assets
+
+      - name: Stage MSI and EXE installers
+        run: node scripts/release/stage_release_assets.cjs --platform windows --assets-dir target/release/bundle --output-dir release-assets
+
+      - name: Add portable package and checksums
+        shell: pwsh
+        run: |
+          Copy-Item portable-assets/* release-assets/
+          $checksums = Get-ChildItem release-assets -File | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $($_.Name)"
+          }
+          $checksums | Set-Content -Encoding ascii release-assets/SHA256SUMS.txt
+
+      - name: Upload Windows install packages
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: cockpit-tools-ad-free-windows-${{ github.run_number }}
+          path: release-assets/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish build summary
+        if: always()
+        shell: pwsh
+        run: |
+          "### Cockpit Tools — Ad-free Windows x64" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          if (Test-Path release-assets) {
+            Get-ChildItem release-assets -File | ForEach-Object {
+              "- $($_.Name) — $([math]::Round($_.Length / 1MB, 2)) MB" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+            }
+          } else {
+            "No installer artifacts were staged." | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          }
