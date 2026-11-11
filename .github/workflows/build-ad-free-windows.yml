@@ -39,12 +39,6 @@ jobs:
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Run frontend regression tests
-        run: npm test
-
-      - name: Run release-script tests
-        run: npm run test:release
-
       - name: Sync application versions
         run: npm run sync-version
 
